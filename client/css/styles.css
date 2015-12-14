@@ -1,0 +1,32 @@
+.shappIcon {
+  max-width: 500px;
+  width: 90%;
+}
+
+.wrapperLogin {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fbButton {
+  max-width: 250px;
+  width: 90%;
+  margin-top: 25px;
+}
+
+.title, .subtitle {
+  font-family: arial;
+  color: #285DA1;
+}
+
+.title {
+  font-size: 100px;
+  margin-top: 30px;
+  margin-bottom: 0px;
+}
+
+.subtitle {
+  margin-top: 0px;
+}

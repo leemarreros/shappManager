@@ -1,19 +1,27 @@
 {
-  "name": "shappweb",
+  "name": "steve_resume",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "babelify": "^6.3.0",
+    "browser-sync": "^2.9.11",
+    "gridfs-stream": "^1.1.1",
+    "grunt": "^0.4.5",
+    "grunt-contrib-copy": "^0.8.2",
+    "grunt-pngquant": "^0.1.8",
+    "react": "^0.14.0-rc1",
+    "react-dom": "^0.14.0-rc1",
+    "watchify": "^3.4.0"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm run watchify & npm run browsersync",
+    "watchify": "watchify client/index.js -v -t babelify -o client/bundle.js",
+    "browsersync": "browser-sync start --server client --files 'client/**/*.js', 'client/css/*.css'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/steveleec/shappManager.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/steveleec/shappManager/issues"
-  },
-  "homepage": "https://github.com/steveleec/shappManager#readme"
+  "devDependencies": {
+    "grunt-contrib-cssmin": "^0.14.0",
+    "grunt-spritesmith": "^5.2.0",
+    "grunt-contrib-uglify": "^0.11.0"
+  }
 }
