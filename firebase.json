@@ -1,0 +1,9 @@
+{
+  "firebase": "shappweb",
+  "public": "client",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}

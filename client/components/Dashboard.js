@@ -10,10 +10,14 @@ class Dashboard extends React.Component{
     };
   }
 
+  handleClick() {
+    // this.props.onLogOutPress();
+  }
+
   render() {
     return (
       <div className="wrapperLogin">
-        Dashboard
+
       </div>
       );
   }

@@ -14,7 +14,17 @@ class ShappWeb extends React.Component{
   }
 
   handleLogin(bool) {
+    console.log('inside handleLogin');
     this.setState({loggedIn: bool});
+  }
+
+  componentWillMount() {
+
+  }
+
+  componentDidMount(){
+
+
   }
 
   render() {
@@ -23,7 +33,7 @@ class ShappWeb extends React.Component{
         {this.state.loggedIn ?
           <Dashboard />
           :
-          <Login handleLogin={this.handleLogin} />}
+          <Login handleLogin={this.handleLogin.bind(this)} />}
       </div>
       );
   }
