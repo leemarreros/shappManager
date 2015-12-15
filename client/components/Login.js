@@ -11,6 +11,7 @@ class ShappWeb extends React.Component{
     this.state = {
       response: null,
       FB: null,
+      userInfo: null,
     };
   }
 
@@ -23,8 +24,9 @@ class ShappWeb extends React.Component{
       });
 
       FB.getLoginStatus(function(response){
-        console.log(response.status);
+        console.log('initialize response', response);
         this.setState({response, FB});
+        if (response.status) this.retrieveUserInfo();
       }.bind(this));
 
     }.bind(this);
@@ -40,14 +42,28 @@ class ShappWeb extends React.Component{
   }
 
   retrieveUserInfo() {
-    FB.api('/me?fields=id,name,picture', function(response) {
-      console.log('retrieving data', response);
+    FB.api('/me?fields=id,name,picture', function(userInfo) {
+      console.log('retrieving data', userInfo);
+      // console.log(userInfo);
+      this.setState({userInfo});
     }.bind(this));
+
+    FB.api(
+      "...?fields={fieldname_of_type_ProfilePictureSource}",
+      function (response) {
+        if (response.error){console.log(response.error)};
+        if (response && !response.error) {
+          /* handle the result */
+          console.log('api', response);
+        }
+      }
+    );
   }
 
   onLoginPress() {
     FB.getLoginStatus(function(response) {
       if (response.status === 'connected') {
+        console.log('already logged in');
         this.retrieveUserInfo()
       } else if (response.status === 'not_authorized') {
         console.log('not_authorized');
@@ -56,7 +72,7 @@ class ShappWeb extends React.Component{
         FB.login(function(response){
           if (response.status === 'connected') this.retrieveUserInfo();
           this.setState({response});
-        }.bind(this));
+        }.bind(this), {scope: 'user_photos'});
       }
     }.bind(this));
   }
@@ -69,11 +85,14 @@ class ShappWeb extends React.Component{
     if (this.state.response === null) {
       return <div>Loading</div>
     }
-    console.log(this.state.response.status);
+    console.log('status', this.state.response.status);
     return (
       <div>
         {this.state.response.status === "connected" ?
-          <Dashboard setStateResponse={this.setStateResponse.bind(this)} FB={this.state.FB}/>
+          <Dashboard
+            userInfo={this.state.userInfo}
+            setStateResponse={this.setStateResponse.bind(this)}
+            FB={this.state.FB}/>
           :
         <div className="wrapperLogin">
 
