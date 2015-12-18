@@ -46,7 +46,7 @@ class Dashboard extends React.Component{
         </div>
         <div className="line"/>
         <div className="bodyContent">
-          {this.state.option === "art" ? <Article /> : <Work />}
+          {this.state.option === "art" ? <Article userInfo={this.props.userInfo}/> : <Work userInfo={this.props.userInfo}/>}
         </div>
         <div onClick={this.handleLogOut.bind(this)}> Log Out </div>
       </div>
