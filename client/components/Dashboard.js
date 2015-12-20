@@ -30,7 +30,8 @@ class Dashboard extends React.Component{
   }
 
   handleClick (option) {
-    this.setState({option})
+    this.setState({option});
+    this.setState({userInfo: this.state.userInfo});
   }
 
   render() {

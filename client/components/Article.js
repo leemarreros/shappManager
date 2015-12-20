@@ -19,38 +19,42 @@ class Article extends React.Component{
   }
 
   onSaveClick() {
-
+   // var url = `${globalVar.restUrl}/api/sign_s3`;
+   // fetch(url)
+   //  .then((response) => response.json())
+   //  .then((responseData) => {
+   //    console.log(responseData);
+   //  })
+   //  .done();
   }
 
   onClickPublish() {
-    console.log('publish button');
+    console.log('article publish button');
     if (this.state.userInfo) {
       var url = `${globalVar.restUrl}/api/articles/${this.state.userInfo.id}`;
-
       var body = {
+        createdBy: this.state.userInfo.id,
         title: this.state.title,
         content: this.state.content,
         tags: this.state.tags,
-        picture: this.state.picture
+        picture: null
       };
-    }
+      if (this.state.addingFiles) body.picture = this.state.picture;
 
-  //   fetch(helpers.requestHelper(url, body, 'POST'))
-  //   .then((response) => response.json())
-  //   .then((responseData) => {
-  //     console.log(responseData);
-  //     if (responseData.status === 'notNew') {
-  //       this.alertIOS('This user already exists!', 'Please, Sign In.');
-  //     } else if (responseData.status = 'successSignUp') {
-  //       this.alertIOS('Welcome to Shapp!', 'Please, Continue.');
-  //       this.switchToTabManager();
-  //     }
-  //   })
-  //   .done();
+      console.log('before fetching');
+      fetch(helpers.requestHelper(url, body, 'POST'))
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log('data s3 url');
+        console.log(responseData.status);
+      })
+      .done();
+      console.log('after fetching');
+    }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('next', nextProps.userInfo);
+    console.log('Article.js next')
     if (nextProps.userInfo) {
       this.setState({userInfo: nextProps.userInfo});
     }
@@ -60,9 +64,11 @@ class Article extends React.Component{
     var fileReader = new FileReader();
     fileReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
     fileReader.onload = function(e) {
-      this.setState({addingFiles: true});
+      // Binary64-url
       console.log('onload', e.target.result);
       document.getElementById("uploadPreview").src = e.target.result;
+      this.setState({picture: e.target.result});
+      this.setState({addingFiles: true});
     }.bind(this);
   }
 

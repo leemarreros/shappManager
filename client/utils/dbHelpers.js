@@ -7,14 +7,15 @@ var helpers = {
       formBody.push(encodedKey + "=" + encodedValue);
     }
     formBody = formBody.join("&");
-    var request = new Request(url, {
-        body: formBody,
+    var params = {
         headers: {
           'Accept': 'application/json',
-          'Content-Type': 'application/x-www-form-urlencoded'
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
         method
-      });
+      };
+    if (body) params.body = formBody;
+    var request = new Request(url, params);
     return request;
   },
 

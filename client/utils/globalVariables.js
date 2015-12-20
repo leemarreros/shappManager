@@ -1,3 +1,3 @@
 module.exports = {
-  restUrl: 'http://localhost:8000',
+  restUrl: 'http://shaponline.com:8000',
 };
