@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import helpers from '../utils/dbHelpers';
 import globalVar from '../utils/globalVariables';
 
+
 class Work extends React.Component{
   constructor(props) {
     super(props);
@@ -15,15 +16,42 @@ class Work extends React.Component{
       description: null,
       tags: null,
       picture: null,
-      video: null,
       userInfo: null,
       addingImage: false,
-      addingVideo: false
+      addingVideo: true,
+      mediaFile: null
     };
   }
 
   onClickPublish() {
-    console.log('publish work button');
+  }
+
+  onMediaSubmitted(document) {
+    console.log('on media submitted');
+    var mediaFile = document.getElementById("uploadMedia").files[0];
+
+    if (mediaFile.type === 'video/mp4') {
+      this.setState({mediaFile});
+
+      console.log('inside if video');
+      this.setState({addingImage: false, addingVideo: true});
+      return;
+    }
+
+    var fileReader = new FileReader();
+    fileReader.readAsDataURL(mediaFile);
+    fileReader.onload = function(e) {
+      console.log('onload', e.target.result.substring(5, 10));
+      if (e.target.result.substring(5, 10) === 'image') {
+        this.setState({picture: e.target.result});
+        this.setState({addingImage: true, addingVideo: false});
+        document.getElementById("uploadPreview").src = e.target.result;
+      }
+    }.bind(this);
+  }
+
+  addMediaFilePicture() {
+    console.log('addMediaFilePicture work button');
     if (this.props.userInfo) {
       var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
       var body = {
@@ -36,36 +64,38 @@ class Work extends React.Component{
         video: null,
       };
       if (this.state.addingImage) body.picture = this.state.picture;
-      if (this.state.addingVideo) body.video = this.state.video;
-      console.log('body.video', body.video);
-      console.log('before fetching');
+      // if (this.state.addingVideo) body.video = this.state.video;
       fetch(helpers.requestHelper(url, body, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('data s3 url');
         console.log(responseData.status);
       })
       .done();
-      console.log('after fetching');
     }
+
   }
 
-  onMediaSubmitted(document) {
-    console.log('on media submitted');
-    var fileReader = new FileReader();
-    fileReader.readAsDataURL(document.getElementById("uploadMedia").files[0]);
-    fileReader.onload = function(e) {
-      // Binary64-url
-      console.log('onload', e.target.result.substring(5, 10));
-      if (e.target.result.substring(5, 10) === 'image') {
-        this.setState({picture: e.target.result});
-        this.setState({addingImage: true, addingVideo: false});
-        document.getElementById("uploadPreview").src = e.target.result;
-      } else if ( e.target.result.substring(5, 10) === 'video') {
-        this.setState({addingImage: false, addingVideo: true});
-        this.setState({video: e.target.result});
-      }
-    }.bind(this);
+  addMediaFileVideo() {
+    console.log('addMediaFilePicture work button');
+    if (this.props.userInfo && this.state.mediaFile) {
+      var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
+      var data = new FormData();
+      var mediaFile = document.getElementById("uploadMedia").files[0];
+      data.append('file', mediaFile);
+      // data.append('title', this.state.title);
+      // data.append('description', this.state.description);
+      // data.append('price', this.state.price);
+      // data.append('category', this.state.category);
+      // data.append('tags', this.state.tags);
+
+      fetch(helpers.requestHelperVideo(url, data, 'POST'))
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData.status);
+      })
+      .done();
+    }
+
   }
 
   render() {
@@ -92,15 +122,17 @@ class Work extends React.Component{
         <div className="uploadPreviewWrapper" style={this.state.addingVideo ? {opacity: 1} : {opacity: 0, height: 0}}>
           <div className="uploadPreviewContainer">
             <video controls width="400" heigth="400">
-              <source type="video/mp4" src={this.state.video}/>
+              <source type="video/mp4" src="http://dj9tqqbq16had.cloudfront.net/Browserify-Overview.mp4"/>
             </video>"
           </div>
+          <div onClick={this.addMediaFileVideo.bind(this)}><span><h1>Add Media File</h1></span></div>
           <span><h1>Ideal size: 400px x 400px</h1></span>
         </div>
         <div className="uploadPreviewWrapper" style={this.state.addingImage ? {opacity: 1} : {opacity: 0, height: 0}}>
           <div className="uploadPreviewContainer">
             <img className="uploadPreview" id="uploadPreview"/>
           </div>
+          <div onClick={this.addMediaFilePicture.bind(this)}><span><h1>Add Media File</h1></span></div>
           <span><h1>Ideal size: 400px x 400px</h1></span>
         </div>
         <div className="wrapperEndButtons">

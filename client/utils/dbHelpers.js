@@ -19,6 +19,20 @@ var helpers = {
     return request;
   },
 
+  requestHelperVideo(url, body, method) {
+
+    var params = {
+        headers: {
+          'Accept': 'application/json',
+        },
+        body,
+        method
+      };
+
+    var request = new Request(url, params);
+    return request;
+  }
+
 }
 
 export default helpers;
