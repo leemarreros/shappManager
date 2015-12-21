@@ -19,7 +19,8 @@ class Work extends React.Component{
       userInfo: null,
       addingImage: false,
       addingVideo: true,
-      mediaFile: null
+      mediaFilePicturesArray: null,
+      mediaFileVideosArray: null
     };
   }
 
@@ -46,6 +47,8 @@ class Work extends React.Component{
 
   onMediaSubmitted(document) {
     console.log('on media submitted');
+    this.arrayPictures = this.arrayPictures || [];
+    this.arrayVideos = this.arrayVideos || [];
     var mediaFile = document.getElementById("uploadMedia").files[0];
 
     if (mediaFile.type === 'video/mp4') {
@@ -68,7 +71,6 @@ class Work extends React.Component{
   }
 
   addMediaFilePicture(picture) {
-    this.arrayPictures = this.arrayPictures || [];
     console.log('addMediaFilePicture work button');
     if (this.props.userInfo) {
       var url = `${globalVar.restUrl}/api/workimages/${this.props.userInfo.id}`;
@@ -80,6 +82,7 @@ class Work extends React.Component{
       .then((responseData) => {
         console.log(responseData);
         this.arrayPictures.push(responseData.awsImageURL);
+        this.showPreviewOfMediaFiles();
         console.log(this.arrayPictures);
       })
       .done();
@@ -87,8 +90,7 @@ class Work extends React.Component{
   }
 
   addMediaFileVideo(mediaFile) {
-    this.arrayVideos = this.arrayVideos || [];
-    console.log('autoclick work button');
+    console.log('addMediaFileVideo work button');
     if (this.props.userInfo) {
       var url = `${globalVar.restUrl}/api/workvideos/${this.props.userInfo.id}`;
       var data = new FormData();
@@ -98,9 +100,38 @@ class Work extends React.Component{
       .then((responseData) => {
         console.log(responseData);
         this.arrayVideos.push(responseData.cloudFrontVName);
+        this.showPreviewOfMediaFiles();
         console.log(this.arrayVideos);
       })
       .done();
+    }
+
+  }
+
+  showPreviewOfMediaFiles() {
+    var prevArrVideos = prevArrVideos || null;
+    var prevArrPictures = prevArrPictures || null;
+
+    if (this.arrayVideos.length === 1 && prevArrVideos === null) {
+      prevArrVideos === 0;
+    }
+
+    if (this.arrayPictures.length === 1 && prevArrPictures === null) {
+      prevArrPictures === 0;
+    }
+
+    if (this.arrayPictures.length !=0) {
+      if (this.arrayVideos.length != prevArrVideos) {
+        this.setState({mediaFilePicturesArray: this.arrayPictures});
+        prevArrVideos = this.arrayVideos.length;
+      }
+    }
+
+    if (this.arrayVideos.length !=0) {
+      if (this.arrayPictures.length != prevArrPictures) {
+        this.setState({mediaFileVideosArray: this.arrayVideos});
+        prevArrPictures = this.arrayPictures.length;
+      }
     }
 
   }
@@ -141,6 +172,30 @@ class Work extends React.Component{
           </div>
           <div onClick={this.addMediaFilePicture.bind(this)}><span><h1>Add Media File</h1></span></div>
           <span><h1>Ideal size: 400px x 400px</h1></span>
+        </div>
+        <div className="displayPreview">
+
+          <div className="picturesDisplay">
+            {this.state.mediaFilePicturesArray && this.state.mediaFilePicturesArray.map(function(picture, i){
+              return (
+                <div key={i} className="picture">
+                  <img src={picture}/>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="videosDisplay">
+            {this.state.mediaFileVideosArray && this.state.mediaFileVideosArray.map(function(video, i){
+              return (
+                <div ckey={i}lassName="video">
+                  <video  controls width="400" heigth="400">
+                    <source type="video/mp4" src={video}/>
+                  </video>
+                </div>
+              );
+            })}
+          </div>
         </div>
         <div className="wrapperEndButtons">
           <div><span><h1>SAVE CHANGES</h1></span></div>
