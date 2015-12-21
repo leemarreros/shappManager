@@ -29,7 +29,6 @@ class Article extends React.Component{
   }
 
   onClickPublish() {
-    console.log('article publish button');
     if (this.state.userInfo) {
       var url = `${globalVar.restUrl}/api/articles/${this.state.userInfo.id}`;
       var body = {
@@ -41,7 +40,6 @@ class Article extends React.Component{
       };
       if (this.state.addingFiles) body.picture = this.state.picture;
 
-      console.log('before fetching');
       fetch(helpers.requestHelper(url, body, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
@@ -49,12 +47,10 @@ class Article extends React.Component{
         console.log(responseData.status);
       })
       .done();
-      console.log('after fetching');
     }
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log('Article.js next')
     if (nextProps.userInfo) {
       this.setState({userInfo: nextProps.userInfo});
     }
@@ -64,8 +60,6 @@ class Article extends React.Component{
     var fileReader = new FileReader();
     fileReader.readAsDataURL(document.getElementById("uploadImage").files[0]);
     fileReader.onload = function(e) {
-      // Binary64-url
-      console.log('onload', e.target.result);
       document.getElementById("uploadPreview").src = e.target.result;
       this.setState({picture: e.target.result});
       this.setState({addingFiles: true});

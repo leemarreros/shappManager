@@ -24,6 +24,24 @@ class Work extends React.Component{
   }
 
   onClickPublish() {
+    var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
+    var body = {
+      title: this.state.title,
+      description: this.state.description,
+      price: this.state.price,
+      category: this.state.category,
+      tags: this.state.tags,
+      pictures: this.arrayPictures,
+      videos: this.arrayVideos,
+    };
+
+    fetch(helpers.requestHelper(url, body, 'POST'))
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData.status);
+      })
+      .done();
+
   }
 
   onMediaSubmitted(document) {
@@ -31,10 +49,9 @@ class Work extends React.Component{
     var mediaFile = document.getElementById("uploadMedia").files[0];
 
     if (mediaFile.type === 'video/mp4') {
-      this.setState({mediaFile});
-
       console.log('inside if video');
-      this.setState({addingImage: false, addingVideo: true});
+      this.addMediaFileVideo(mediaFile);
+      this.setState({addingVideo: true});
       return;
     }
 
@@ -43,55 +60,45 @@ class Work extends React.Component{
     fileReader.onload = function(e) {
       console.log('onload', e.target.result.substring(5, 10));
       if (e.target.result.substring(5, 10) === 'image') {
-        this.setState({picture: e.target.result});
-        this.setState({addingImage: true, addingVideo: false});
-        document.getElementById("uploadPreview").src = e.target.result;
+        this.addMediaFilePicture(e.target.result);
+        this.setState({addingImage: true});
+        // document.getElementById("uploadPreview").src = e.target.result;
       }
     }.bind(this);
   }
 
-  addMediaFilePicture() {
+  addMediaFilePicture(picture) {
+    this.arrayPictures = this.arrayPictures || [];
     console.log('addMediaFilePicture work button');
     if (this.props.userInfo) {
-      var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
+      var url = `${globalVar.restUrl}/api/workimages/${this.props.userInfo.id}`;
       var body = {
-        title: this.state.title,
-        description: this.state.description,
-        price: this.state.price,
-        category: this.state.category,
-        tags: this.state.tags,
-        picture: null,
-        video: null,
+        picture,
       };
-      if (this.state.addingImage) body.picture = this.state.picture;
-      // if (this.state.addingVideo) body.video = this.state.video;
       fetch(helpers.requestHelper(url, body, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.status);
+        console.log(responseData);
+        this.arrayPictures.push(responseData.awsImageURL);
+        console.log(this.arrayPictures);
       })
       .done();
     }
-
   }
 
-  addMediaFileVideo() {
-    console.log('addMediaFilePicture work button');
-    if (this.props.userInfo && this.state.mediaFile) {
-      var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
+  addMediaFileVideo(mediaFile) {
+    this.arrayVideos = this.arrayVideos || [];
+    console.log('autoclick work button');
+    if (this.props.userInfo) {
+      var url = `${globalVar.restUrl}/api/workvideos/${this.props.userInfo.id}`;
       var data = new FormData();
-      var mediaFile = document.getElementById("uploadMedia").files[0];
       data.append('file', mediaFile);
-      // data.append('title', this.state.title);
-      // data.append('description', this.state.description);
-      // data.append('price', this.state.price);
-      // data.append('category', this.state.category);
-      // data.append('tags', this.state.tags);
-
       fetch(helpers.requestHelperVideo(url, data, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.status);
+        console.log(responseData);
+        this.arrayVideos.push(responseData.cloudFrontVName);
+        console.log(this.arrayVideos);
       })
       .done();
     }
