@@ -140,10 +140,39 @@ class Work extends React.Component{
     return (
       <div className="wrapperArticles">
         <div><div className="wrappH1"><h1>All Products</h1></div></div>
-        <div><input className="inputBox" type="text" placeholder="Product's title"></input></div>
-        <div className="twoInputBoxes"><input className="inputBox" type="number" placeholder="Price ($124.00)"></input><input className="inputBox" type="text" placeholder="Category"></input></div>
-        <div><textarea className="textArea" rows="4" placeholder="Describe what are you thoughts here!" cols="50"></textarea></div>
-        <div><input className="inputBox" type="text" placeholder="Tags (example: metal, glass, gold)"></input></div>
+        <div>
+          <input
+            className="inputBox"
+            type="text"
+            onChange={(event)=> {this.setState({title: event.target.value})}}
+            placeholder="Product's title"/>
+        </div>
+        <div className="twoInputBoxes">
+          <input
+            className="inputBox"
+            type="number"
+            onChange={(event)=> {this.setState({price: event.target.value})}}
+            placeholder="Price ($124.00)"/>
+          <input
+            className="inputBox"
+            type="text"
+            onChange={(event)=> {this.setState({category: event.target.value})}}
+            placeholder="Category"/>
+        </div>
+        <div>
+          <textarea
+            className="textArea"
+            rows="4"
+            onChange={(event)=> {this.setState({description: event.target.value})}}
+            placeholder="Describe what are you thoughts here!" cols="50"/>
+        </div>
+        <div>
+          <input
+            className="inputBox"
+            type="text"
+            onChange={(event)=> {this.setState({tags: event.target.value})}}
+            placeholder="Tags (example: metal, glass, gold)"/>
+        </div>
         <div className="addFiles">
           <div className="wrapperButtonsArticle">
             <span className="addFilesButton">
@@ -157,29 +186,14 @@ class Work extends React.Component{
             </span>
           <img className="cameraButton" src={'../img/camera-publish-icon.png'}/></div>
         </div>
-        <div className="uploadPreviewWrapper" style={this.state.addingVideo ? {opacity: 1} : {opacity: 0, height: 0}}>
-          <div className="uploadPreviewContainer">
-            <video controls width="400" heigth="400">
-              <source type="video/mp4" src="http://dj9tqqbq16had.cloudfront.net/Browserify-Overview.mp4"/>
-            </video>"
-          </div>
-          <div onClick={this.addMediaFileVideo.bind(this)}><span><h1>Add Media File</h1></span></div>
-          <span><h1>Ideal size: 400px x 400px</h1></span>
-        </div>
-        <div className="uploadPreviewWrapper" style={this.state.addingImage ? {opacity: 1} : {opacity: 0, height: 0}}>
-          <div className="uploadPreviewContainer">
-            <img className="uploadPreview" id="uploadPreview"/>
-          </div>
-          <div onClick={this.addMediaFilePicture.bind(this)}><span><h1>Add Media File</h1></span></div>
-          <span><h1>Ideal size: 400px x 400px</h1></span>
-        </div>
+
         <div className="displayPreview">
 
           <div className="picturesDisplay">
             {this.state.mediaFilePicturesArray && this.state.mediaFilePicturesArray.map(function(picture, i){
               return (
-                <div key={i} className="picture">
-                  <img src={picture}/>
+                <div key={i} className="pictureWrapper">
+                  <img className="picture" src={picture}/>
                 </div>
               );
             })}
@@ -188,8 +202,8 @@ class Work extends React.Component{
           <div className="videosDisplay">
             {this.state.mediaFileVideosArray && this.state.mediaFileVideosArray.map(function(video, i){
               return (
-                <div ckey={i}lassName="video">
-                  <video  controls width="400" heigth="400">
+                <div key={i} className="videoWrapper">
+                  <video  className="video" controls width="400" heigth="400">
                     <source type="video/mp4" src={video}/>
                   </video>
                 </div>
