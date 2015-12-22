@@ -253,6 +253,43 @@
   border: black solid 1px;
 }
 
+.wrapperInputArea {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.wrapperInputArea div {
+  width: 100%;
+  margin-top: 10px;
+}
+
+
+.uploadPreviewWrapper {
+  display: flex;
+  flex-direction: column;
+  /*width: 50%;*/
+}
+
+.uploadPreviewWrapper h1 {
+  text-align: center;
+  font-family: "Avenir";
+  font-weight: 100;
+  font-size: 20px;
+}
+
+.uploadPreviewContainer {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+}
+
+.uploadPreview {
+  width: 80%;
+  border: 1px solid black;
+}
 
 .videosDisplay {
   display: flex;

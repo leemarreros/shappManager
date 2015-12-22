@@ -23,7 +23,6 @@ class Work extends React.Component{
       mediaFileVideosArray: null,
       showAllProducts: false,
       listOfProducts: null,
-      positionPicture: 0
     };
   }
 
@@ -143,7 +142,7 @@ class Work extends React.Component{
 
   }
 
-  onAllAProductsClick() {
+  onAllProductsClick() {
     this.setState({showAllProducts: !this.state.showAllProducts});
     if (this.state.listOfProducts === null) {
       var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
@@ -162,7 +161,7 @@ class Work extends React.Component{
     return (
       <div className="wrapperArticles">
         <div>
-          <div className="wrappH1" onClick={this.onAllAProductsClick.bind(this)}>
+          <div className="wrappH1" onClick={this.onAllProductsClick.bind(this)}>
             {this.state.showAllProducts ?
               <h1>Add a product</h1>
               :
