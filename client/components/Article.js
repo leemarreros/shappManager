@@ -43,7 +43,6 @@ class Article extends React.Component{
       fetch(helpers.requestHelper(url, body, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
-        console.log('data s3 url');
         console.log(responseData.status);
       })
       .done();

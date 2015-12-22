@@ -66,6 +66,8 @@
 
 .wrapperButtons > div {
   width: 257px;
+  cursor: pointer;
+  cursor: hand;
 }
 
 .underline {
@@ -116,6 +118,8 @@
   justify-content: flex-end;
   font-family: "Avenir";
   color: #285DA1;
+  cursor: pointer;
+  cursor: hand;
 }
 
 .inputBox {
@@ -189,11 +193,15 @@
   flex: 1;
   width: 300px;
   height: 66px;
+  cursor: pointer;
+  cursor: hand;
 }
 
 .wrapperEndButtons {
   display: flex;
   justify-content: center;
+  cursor: pointer;
+  cursor: hand;
 }
 
 .wrapperEndButtons div {
@@ -234,10 +242,12 @@
 }
 
 .pictureWrapper {
+  display: flex;
+  align-self: center;
 }
 
 .picture {
-  margin: 10px;
+  margin: 20px;
   width: 250px;
   height: 250px;
   border: black solid 1px;
@@ -263,3 +273,47 @@
 }
 
 
+/*ALL PRODUCTS*/
+.wrapperProuct {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid black;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.wrapperText {
+  flex: 3;
+  padding-right: 10px;
+}
+
+.wrapperImage {
+  flex: 1;
+}
+
+.wrapperPictureList {
+  width: 100%;
+  display: flex;
+}
+
+.titleProduct h1 {
+  font-size: 20px;
+  font-family: "Avenir";
+  padding-left: 10px;
+  font-weight: 400;
+}
+
+.descriptionProduct h1 {
+  font-size: 15px;
+  font-family: "Avenir";
+  padding-left: 10px;
+  font-weight: 100;
+  text-align: justify;
+}
+
+.pictureList {
+  object-fit: contain;
+  width: 100%;
+  height: 200px;
+}

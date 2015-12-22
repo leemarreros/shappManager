@@ -20,7 +20,10 @@ class Work extends React.Component{
       addingImage: false,
       addingVideo: true,
       mediaFilePicturesArray: null,
-      mediaFileVideosArray: null
+      mediaFileVideosArray: null,
+      showAllProducts: false,
+      listOfProducts: null,
+      positionPicture: 0
     };
   }
 
@@ -35,11 +38,16 @@ class Work extends React.Component{
       pictures: this.arrayPictures,
       videos: this.arrayVideos,
     };
-
+    console.log(this.state.arrayPictures);
     fetch(helpers.requestHelper(url, body, 'POST'))
       .then((response) => response.json())
       .then((responseData) => {
         console.log(responseData.status);
+        this.arrayPictures = [];
+        this.arrayVideos = [];
+        this.setState({listOfProducts: null, showAllProducts: true});
+        this.setState({mediaFilePicturesArray: null});
+        this.setState({mediaFileVideosArray: null});
       })
       .done();
 
@@ -65,7 +73,6 @@ class Work extends React.Component{
       if (e.target.result.substring(5, 10) === 'image') {
         this.addMediaFilePicture(e.target.result);
         this.setState({addingImage: true});
-        // document.getElementById("uploadPreview").src = e.target.result;
       }
     }.bind(this);
   }
@@ -136,89 +143,141 @@ class Work extends React.Component{
 
   }
 
+  onAllAProductsClick() {
+    this.setState({showAllProducts: !this.state.showAllProducts});
+    if (this.state.listOfProducts === null) {
+      var url = `${globalVar.restUrl}/api/work/${this.props.userInfo.id}`;
+
+      fetch(url)
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log(responseData);
+        this.setState({listOfProducts: responseData.data});
+      })
+      .done();
+    }
+  }
+
   render() {
     return (
       <div className="wrapperArticles">
-        <div><div className="wrappH1"><h1>All Products</h1></div></div>
         <div>
-          <input
-            className="inputBox"
-            type="text"
-            onChange={(event)=> {this.setState({title: event.target.value})}}
-            placeholder="Product's title"/>
-        </div>
-        <div className="twoInputBoxes">
-          <input
-            className="inputBox"
-            type="number"
-            onChange={(event)=> {this.setState({price: event.target.value})}}
-            placeholder="Price ($124.00)"/>
-          <input
-            className="inputBox"
-            type="text"
-            onChange={(event)=> {this.setState({category: event.target.value})}}
-            placeholder="Category"/>
-        </div>
-        <div>
-          <textarea
-            className="textArea"
-            rows="4"
-            onChange={(event)=> {this.setState({description: event.target.value})}}
-            placeholder="Describe what are you thoughts here!" cols="50"/>
-        </div>
-        <div>
-          <input
-            className="inputBox"
-            type="text"
-            onChange={(event)=> {this.setState({tags: event.target.value})}}
-            placeholder="Tags (example: metal, glass, gold)"/>
-        </div>
-        <div className="addFiles">
-          <div className="wrapperButtonsArticle">
-            <span className="addFilesButton">
-              <input
-                className="inputFile"
-                type="file"
-                name="photo"
-                id="uploadMedia"
-                onChange={this.onMediaSubmitted.bind(this, document)}/>
-                <h1>+ Add Files</h1>
-            </span>
-          <img className="cameraButton" src={'../img/camera-publish-icon.png'}/></div>
-        </div>
-
-        <div className="displayPreview">
-
-          <div className="picturesDisplay">
-            {this.state.mediaFilePicturesArray && this.state.mediaFilePicturesArray.map(function(picture, i){
-              return (
-                <div key={i} className="pictureWrapper">
-                  <img className="picture" src={picture}/>
-                </div>
-              );
-            })}
-          </div>
-
-          <div className="videosDisplay">
-            {this.state.mediaFileVideosArray && this.state.mediaFileVideosArray.map(function(video, i){
-              return (
-                <div key={i} className="videoWrapper">
-                  <video  className="video" controls width="400" heigth="400">
-                    <source type="video/mp4" src={video}/>
-                  </video>
-                </div>
-              );
-            })}
+          <div className="wrappH1" onClick={this.onAllAProductsClick.bind(this)}>
+            {this.state.showAllProducts ?
+              <h1>Add a product</h1>
+              :
+              <h1>All Products</h1>
+            }
           </div>
         </div>
-        <div className="wrapperEndButtons">
-          <div><span><h1>SAVE CHANGES</h1></span></div>
-          <div onClick={this.onClickPublish.bind(this)}>
-            <span>
-              <h1>PUBLISH</h1>
-            </span>
+
+        { this.state.showAllProducts ?
+          <div className="wrapperAllProducts">
+            { this.state.listOfProducts && this.state.listOfProducts.map(function(product, i){
+                return (
+                  <div key={i} className="wrapperProuct">
+                    <div className="wrapperText">
+                      <div className="titleProduct"><h1>{product.title}</h1></div>
+                      <div className="descriptionProduct"><h1>{product.description}</h1></div>
+                    </div>
+                    <div className="wrapperImage">
+                      {
+                        !!product.pictures.length ?
+                        <div className="wrapperPictureList">
+                          <img className="pictureList" src={product.pictures[0]}/>
+                        </div>
+                        :
+                        <div className="noPictureList"/>
+                      }
+                      </div>
+                  </div>
+                );
+              })
+            }
           </div>
-        </div>
+          :
+          <div>
+          <div>
+            <input
+              className="inputBox"
+              type="text"
+              onChange={(event)=> {this.setState({title: event.target.value})}}
+              placeholder="Product's title"/>
+          </div>
+          <div className="twoInputBoxes">
+            <input
+              className="inputBox"
+              type="number"
+              onChange={(event)=> {this.setState({price: event.target.value})}}
+              placeholder="Price ($124.00)"/>
+            <input
+              className="inputBox"
+              type="text"
+              onChange={(event)=> {this.setState({category: event.target.value})}}
+              placeholder="Category"/>
+          </div>
+          <div>
+            <textarea
+              className="textArea"
+              rows="4"
+              onChange={(event)=> {this.setState({description: event.target.value})}}
+              placeholder="Describe what are you thoughts here!" cols="50"/>
+          </div>
+          <div>
+            <input
+              className="inputBox"
+              type="text"
+              onChange={(event)=> {this.setState({tags: event.target.value})}}
+              placeholder="Tags (example: metal, glass, gold)"/>
+          </div>
+          <div className="addFiles">
+            <div className="wrapperButtonsArticle">
+              <span className="addFilesButton">
+                <input
+                  className="inputFile"
+                  type="file"
+                  name="photo"
+                  id="uploadMedia"
+                  onChange={this.onMediaSubmitted.bind(this, document)}/>
+                  <h1>+ Add Files</h1>
+              </span>
+            <img className="cameraButton" src={'../img/camera-publish-icon.png'}/></div>
+          </div>
+
+          <div className="displayPreview">
+
+            <div className="picturesDisplay">
+              {this.state.mediaFilePicturesArray && this.state.mediaFilePicturesArray.map(function(picture, i){
+                return (
+                  <div key={i} className="pictureWrapper">
+                    <img className="picture" src={picture}/>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="videosDisplay">
+              {this.state.mediaFileVideosArray && this.state.mediaFileVideosArray.map(function(video, i){
+                return (
+                  <div key={i} className="videoWrapper">
+                    <video  className="video" controls width="400" heigth="400">
+                      <source type="video/mp4" src={video}/>
+                    </video>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="wrapperEndButtons">
+            <div><span><h1>SAVE CHANGES</h1></span></div>
+            <div onClick={this.onClickPublish.bind(this)}>
+              <span>
+                <h1>PUBLISH</h1>
+              </span>
+            </div>
+          </div>
+          </div>
+        }
       </div>
       );
   }
